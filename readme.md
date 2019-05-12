@@ -276,4 +276,8 @@ two images.
 
 Equations from [Miller et al. (2009)](https://www.fs.fed.us/postfirevegcondition/documents/publications/miller_etal_rse_2009.pdf).
 
-<img src="http://www.sciweavers.org/tex2img.php?eq=%20NBR%20%3D%20%5Cfrac%7BBand4%20-%20Band7%7D%7BBand4%20%2B%20Band7%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt=" NBR = \frac{Band4 - Band7}{Band4 + Band7} " width="193" height="44" />
+<img src="http://www.sciweavers.org/tex2img.php?eq=NBR%20%3D%20%5Cfrac%7BBand4%20-%20Band7%7D%7BBand4%20%2B%20Band7%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathpple&edit=0" align="center" border="0" alt="NBR = \frac{Band4 - Band7}{Band4 + Band7} " width="176" height="39" />
+
+<img src="http://www.sciweavers.org/tex2img.php?eq=dNBR%20%3D%20prefireNBR%20-%20postfireNBR&bc=White&fc=Black&im=jpg&fs=12&ff=mathpple&edit=0" align="center" border="0" alt="dNBR = prefireNBR - postfireNBR" width="276" height="19" />
+
+<img src="http://www.sciweavers.org/tex2img.php?eq=RdNBR%20%3D%20%5Cfrac%7BdNBR%7D%7B%20%5Csqrt%7BABS%28prefireNBR%2F1000%29%7D%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathpple&edit=0" align="center" border="0" alt="RdNBR = \frac{dNBR}{ \sqrt{ABS(prefireNBR/1000)}} " width="282" height="44" />
