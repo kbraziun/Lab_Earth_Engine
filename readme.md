@@ -39,7 +39,7 @@ When you are comfortable with the basics, explore the [Google Earth Engine API](
 
 The main interaction with GEE is through the [code editor](https://code.earthengine.google.com/).
 
-<img src="figures/Playground_diagram_v3_crop.png" alt="Earth Engine Code Editor" width="500">
+<img src="figures/Playground_diagram_v3_crop.png" alt="Earth Engine Code Editor" width="800">
 
 [Click here for a comprehensive overview of the code editor window.](https://developers.google.com/earth-engine/playground#api-reference-docs-tab)
 
