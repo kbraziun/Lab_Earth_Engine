@@ -64,7 +64,7 @@ Search bar on top, one way to import data.
 
 Map on bottom, will look at as we go.
 
-[Click here for a comprehensive overview of the code editor window.](https://developers.google.com/earth-engine/playground#api-reference-docs-tab)
+[Click here for a comprehensive overview of the code editor window.](https://developers.google.com/earth-engine/playground)
 
 ## Case study: Calculating fire severity
 
@@ -240,8 +240,8 @@ function ymdList(imgcol){
     return imgcol.iterate(iter_func, ee.List([]));
 }
 
-print(ymdList(LS8_SR2016))
-print(ymdList(LS8_SR2017))
+print(ymdList(LS8_SR2016));
+print(ymdList(LS8_SR2017));
 ```
 
 We will use the `20170722` image.
@@ -337,6 +337,7 @@ Map.addLayer(rdnbr.unmask(-9999), {min: -500, max: 1500,
   //Color Brewer palette plus black for masked areas
   palette: ['black','2c7bb6','abd9e9','ffffbf','fdae61','d7191c']}, 
   'rdnbr', true);
+Map.addLayer(berry_fire, {color: '000000'}, 'Berry_fire',false);
 ```
 
 ### Additional notes
@@ -350,6 +351,6 @@ Map.addLayer(rdnbr.unmask(-9999), {min: -500, max: 1500,
      visible bands and NIR at 10 m resolution,
      other bands such as SWIR at 20 m resolution
   - [NAIP](https://developers.google.com/earth-engine/datasets/catalog/USDA_NAIP_DOQQ):
-  High resolution aerial imagery (typically 1 m)
+  High resolution aerial imagery (typically 0.5, 1, or 2 m resolution)
   acquired on 3- or 5-year cycle. Recent imagery includes
   NIR in addition to visible bands.
