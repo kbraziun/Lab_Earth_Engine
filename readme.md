@@ -275,7 +275,7 @@ We are going to be calculating RdNBR by hand from these
 two images.
 
 Equations from [Miller et al. (2009)](https://www.fs.fed.us/postfirevegcondition/documents/publications/miller_etal_rse_2009.pdf)
-and (Parks et al. (2018))[https://www.mdpi.com/2072-4292/10/6/879/htm].
+and [Parks et al. (2018)](https://www.mdpi.com/2072-4292/10/6/879/htm).
 
 ![NBR](figures/NBR.jpg)
 
@@ -333,8 +333,8 @@ Parks et al. (2018).
 
 ```javascript
 // used numbers typically reported in papers
-Map.addLayer(rdnbr.unmask(-9999), {min: -500, max: 1500, 
-  // R Color Brewer palette plus black for masked areas
+Map.addLayer(rdnbr.unmask(-9999), {min: -500, max: 1500,
+  //Color Brewer palette plus black for masked areas
   palette: ['black','2c7bb6','abd9e9','ffffbf','fdae61','d7191c']}, 
   'rdnbr', true);
 ```
