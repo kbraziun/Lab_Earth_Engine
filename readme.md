@@ -187,7 +187,7 @@ var cirParams = {
 };
 
 //navigate to desired location in map
-Map.setCenter(-110.7, 44.0, 9);
+Map.setCenter(-110.7, 44.0, 10);
 
 //layers added in order, cannot be moved around
 // image name, visualization parameters, layer name, display on run
@@ -274,10 +274,82 @@ annual).
 We are going to be calculating RdNBR by hand from these
 two images.
 
-Equations from [Miller et al. (2009)](https://www.fs.fed.us/postfirevegcondition/documents/publications/miller_etal_rse_2009.pdf).
+Equations from [Miller et al. (2009)](https://www.fs.fed.us/postfirevegcondition/documents/publications/miller_etal_rse_2009.pdf)
+and (Parks et al. (2018))[https://www.mdpi.com/2072-4292/10/6/879/htm].
 
-<img src="http://www.sciweavers.org/tex2img.php?eq=NBR%20%3D%20%5Cfrac%7BBand4%20-%20Band7%7D%7BBand4%20%2B%20Band7%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathpple&edit=0" align="center" border="0" alt="NBR = \frac{Band4 - Band7}{Band4 + Band7} " width="176" height="39" />
+![NBR](figures/NBR.jpg)
 
-<img src="http://www.sciweavers.org/tex2img.php?eq=dNBR%20%3D%20prefireNBR%20-%20postfireNBR&bc=White&fc=Black&im=jpg&fs=12&ff=mathpple&edit=0" align="center" border="0" alt="dNBR = prefireNBR - postfireNBR" width="276" height="19" />
+Note: bands differ between [Landsat 7](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LE07_C01_T1_SR) and [Landsat 8](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_SR).
 
-<img src="http://www.sciweavers.org/tex2img.php?eq=RdNBR%20%3D%20%5Cfrac%7BdNBR%7D%7B%20%5Csqrt%7BABS%28prefireNBR%2F1000%29%7D%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathpple&edit=0" align="center" border="0" alt="RdNBR = \frac{dNBR}{ \sqrt{ABS(prefireNBR/1000)}} " width="282" height="44" />
+![dNBR](figures/dNBR.jpg)
+
+![RdNBR](figures/RdNBR.jpg)
+
+```javascript
+/**
+* Calculate RdNBR
+*/
+
+// Extract bands of interest
+var nir_2016 = prefire.select('B5');
+var swir2_2016 = prefire.select('B7');
+
+// Calc NBR
+var nbr_2016 = (nir_2016.subtract(swir2_2016)).divide(nir_2016.add(swir2_2016))
+  .rename('nbr_2016')
+  .toFloat();
+
+var nbr_2017 = postfire.normalizedDifference(['B5', 'B7'])
+  .rename('nbr_2017')
+  .toFloat();
+  
+// Calc dNBR
+var dnbr_stack = nbr_2016.subtract(nbr_2017).multiply(1000)
+  .rename('dnbr')
+  .addBands(nbr_2016);
+
+// calculate RdNBR  
+var rdnbr = dnbr_stack.expression(
+  "b('dnbr') / (sqrt(abs(b('nbr_2016'))))")
+  .rename('rdnbr').toFloat();
+```
+
+Visualization approach: get information directly from image
+for setting min and max.
+
+```javascript
+// Use the reducer to get the mean and SD of the image.
+var minMax = ee.Number(rdnbr.reduceRegion({
+  reducer: ee.Reducer.minMax(),
+  bestEffort: true,
+}));
+
+print(minMax); // not very helpful
+```
+
+Approach 2: use prior knowledge.
+The min and max here were used after scanning
+Parks et al. (2018).
+
+```javascript
+// used numbers typically reported in papers
+Map.addLayer(rdnbr.unmask(-9999), {min: -500, max: 1500, 
+  // R Color Brewer palette plus black for masked areas
+  palette: ['black','2c7bb6','abd9e9','ffffbf','fdae61','d7191c']}, 
+  'rdnbr', true);
+```
+
+### Additional notes
+
+- Can use filter for just fire perimeter(s)
+- See Google Earth
+  Engine code from Parks et al. (2018): [link](https://code.earthengine.google.com/c76157be827be2f24570df50cca427e9)
+- Many cool datasets to consider, such as:
+  - [Sentinel 2](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2):
+     5-day revisit frequnecy between 2 satellites,
+     visible bands and NIR at 10 m resolution,
+     other bands such as SWIR at 20 m resolution
+  - [NAIP](https://developers.google.com/earth-engine/datasets/catalog/USDA_NAIP_DOQQ):
+  High resolution aerial imagery (typically 1 m)
+  acquired on 3- or 5-year cycle. Recent imagery includes
+  NIR in addition to visible bands.
