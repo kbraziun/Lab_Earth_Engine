@@ -319,6 +319,14 @@ var rdnbr = dnbr_stack.expression(
   .rename('rdnbr').toFloat();
 ```
 
+Notes on expressions: The `b('dnbr')` refers to a band. Other than that,
+additional permitted mathematical operations within expressions can be found
+[here for symbols](https://developers.google.com/earth-engine/image_math#expressions)
+and within the `Docs` tab of the [code editor](https://code.earthengine.google.com/)
+for text functions like `sqrt()` and `abs()`. Keep in mind that in this example,
+we are applying mathematical operations to an images, so you'll want to look in the
+`ee.Image` section of `Docs`.
+
 Visualization approach: get information directly from image
 for setting min and max.
 
@@ -343,7 +351,9 @@ Parks et al. (2018).
 
 ```javascript
 // used numbers typically reported in papers
-Map.addLayer(rdnbr.unmask(-9999), {min: -500, max: 1500,
+Map.addLayer(rdnbr
+  // .clip(berry_fire) to just get berry fire perimeter
+  .unmask(-9999), {min: -500, max: 1500,
   //Color Brewer palette plus black for masked areas
   palette: ['black','2c7bb6','abd9e9','ffffbf','fdae61','d7191c']},
   'rdnbr', true);
