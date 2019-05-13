@@ -29,8 +29,10 @@ When you are comfortable with the basics, explore the [Google Earth Engine API](
 ## Some caveats
 
 - Learning curve
-  - Uses Javascript, with own set of classes, functions
+  - Online code editor uses Javascript, with own set of classes, functions
   - Can use Python with additional steps
+  - [Google Earth Engine Exporer](https://explorer.earthengine.google.com/) is point-and-click,
+    good for data exploration but limited analysis capabilities
 - Import and export can be slow
 - Limited number of built-in algorithms
 - Not for cartography
@@ -95,6 +97,7 @@ Different options for doing this:
 - Import shapefile
   - Example: Berry Fire perimeter, zipped shapefile
   - Go to assets tab to import it
+- Use an [existing vector dataset](https://developers.google.com/earth-engine/vector_datasets)
 - Identify Landsat tile that covers area of interest,
   here path 38, row 29.
 
@@ -150,6 +153,8 @@ var LS8_SR2016 = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')
   // Find image with minimal cloud cover
   .filterMetadata('CLOUD_COVER', 'less_than', 20)
   // Use provided mask function
+  // .map is used to loop pre-defined functions over all images in a collection
+  // do not use for loops!
   .map(maskL8sr);
 
 // Print metadata to console
@@ -169,7 +174,7 @@ var prefire = LS8_SR2016
  * or other sources.
  * Can also be configured after adding the layer
  */
- 
+
 //true color
 var visParams = {
   bands: ['B4', 'B3', 'B2'],
@@ -247,7 +252,7 @@ print(ymdList(LS8_SR2017));
 We will use the `20170722` image.
 
 ```javascript
-/** 
+/**
 * Filter and visualize postfire
 */
 
@@ -325,6 +330,11 @@ var minMax = ee.Number(rdnbr.reduceRegion({
 }));
 
 print(minMax); // not very helpful
+
+// Or plot a histogram for a limited geometry
+// If you haven't drawn a box around the Berry Fire area, do so now!
+var histogram = ui.Chart.image.histogram(rdnbr, geometry);
+print(histogram);
 ```
 
 Approach 2: use prior knowledge.
@@ -335,7 +345,7 @@ Parks et al. (2018).
 // used numbers typically reported in papers
 Map.addLayer(rdnbr.unmask(-9999), {min: -500, max: 1500,
   //Color Brewer palette plus black for masked areas
-  palette: ['black','2c7bb6','abd9e9','ffffbf','fdae61','d7191c']}, 
+  palette: ['black','2c7bb6','abd9e9','ffffbf','fdae61','d7191c']},
   'rdnbr', true);
 Map.addLayer(berry_fire, {color: '000000'}, 'Berry_fire',false);
 ```
@@ -354,3 +364,5 @@ Map.addLayer(berry_fire, {color: '000000'}, 'Berry_fire',false);
   High resolution aerial imagery (typically 0.5, 1, or 2 m resolution)
   acquired on 3- or 5-year cycle. Recent imagery includes
   NIR in addition to visible bands.
+  - MODIS [monthly burned area](https://developers.google.com/earth-engine/datasets/catalog/MODIS_006_MCD64A1)
+    and [daily Fire Radiative Power](https://developers.google.com/earth-engine/datasets/catalog/MODIS_006_MOD14A1).
